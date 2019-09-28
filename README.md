@@ -42,7 +42,9 @@ To generate a searchable PDF, we use [Amazon Textract](https://aws.amazon.com/te
 
 1. Setup AWS Account and AWS CLI using [getting started with Amazon Textract](https://docs.aws.amazon.com/textract/latest/dg/getting-started.html).
 2. Download and unzip the [sample project](./src/SearchablePDF.zip).
-3. Run Java project with [Demo](./src/SearchablePDF/src/main/java/Demo.java) as main class.
+3. In the project directory run "mvn package".
+4. Run: "java -cp target/searchable-pdf-1.0.jar Demo" to run Java project with [Demo](./src/SearchablePDF/src/main/java/Demo.java) as main class.
+5. By default only first example to create searchable PDF from image on local drive is enabled. Uncomment relevant lines in [Demo](./src/SearchablePDF/src/main/java/Demo.java) to run other examples.
 
 ## Run code examples in AWS Lambda
 
