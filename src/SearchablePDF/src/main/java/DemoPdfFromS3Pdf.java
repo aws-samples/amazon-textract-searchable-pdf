@@ -108,6 +108,8 @@ public class DemoPdfFromS3Pdf {
 
     public static void run(String bucketName, String documentName, String outputDocumentName) throws IOException, InterruptedException {
 
+        System.out.println("Generating searchable pdf from: " + bucketName + "/" + documentName);
+
         //Extract text using Amazon Textract
         List<ArrayList<TextLine>> linesInPages = extractText(bucketName, documentName);
 
@@ -137,5 +139,7 @@ public class DemoPdfFromS3Pdf {
 
         //Upload PDF to S3
         UploadToS3(bucketName, outputDocumentName, "application/pdf", os.toByteArray());
+
+        System.out.println("Generated searchable pdf: " + bucketName + "/" + outputDocumentName);
     }
 }

@@ -54,6 +54,8 @@ public class DemoPdfFromLocalImage {
 
     public static void run(String documentName, String outputDocumentName) throws IOException {
 
+        System.out.println("Generating searchable pdf from: " + documentName);
+
         ImageType imageType = ImageType.JPEG;
         if(documentName.toLowerCase().endsWith(".png"))
             imageType = ImageType.PNG;
@@ -81,5 +83,7 @@ public class DemoPdfFromLocalImage {
             pdfDocument.save(outputStream);
             pdfDocument.close();
         }
+
+        System.out.println("Generated searchable pdf: " + outputDocumentName);
     }
 }

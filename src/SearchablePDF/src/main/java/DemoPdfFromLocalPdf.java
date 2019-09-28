@@ -44,6 +44,8 @@ public class DemoPdfFromLocalPdf {
 
     public static void run(String documentName, String outputDocumentName) throws IOException {
 
+        System.out.println("Generating searchable pdf from: " + documentName);
+
         PDFDocument pdfDocument = new PDFDocument();
 
         List<TextLine> lines = null;
@@ -81,5 +83,7 @@ public class DemoPdfFromLocalPdf {
             pdfDocument.save(outputStream);
             pdfDocument.close();
         }
+
+        System.out.println("Generated searchable pdf: " + outputDocumentName);
     }
 }

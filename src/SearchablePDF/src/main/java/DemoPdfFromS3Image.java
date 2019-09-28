@@ -65,6 +65,8 @@ public class DemoPdfFromS3Image {
 
     public static void run(String bucketName, String documentName, String outputDocumentName) throws IOException {
 
+        System.out.println("Generating searchable pdf from: " + bucketName + "/" + documentName);
+
         ImageType imageType = ImageType.JPEG;
         if(documentName.toLowerCase().endsWith(".png"))
             imageType = ImageType.PNG;
@@ -88,5 +90,7 @@ public class DemoPdfFromS3Image {
 
         //Upload PDF to S3
         UploadToS3(bucketName, outputDocumentName, "application/pdf", os.toByteArray());
+
+        System.out.println("Generated searchable pdf: " + bucketName + "/" + outputDocumentName);
     }
 }
