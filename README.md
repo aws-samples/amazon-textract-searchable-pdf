@@ -6,7 +6,7 @@ This repository contains sample library and code examples showing how Amazon Tex
 
 To generate a searchable PDF, we use [Amazon Textract](https://aws.amazon.com/textract/) to extract text from documents and then add extracted text as a layer to the image in the PDF document. Amazon Textract detect and analyze text input documents and returns information about detected items such as pages, words, lines, form data (key-value pairs), tables, selection elements etc. It also provides bounding box information which is an axis-aligned coarse representation of the location of the recognized item on the document page. We use detected text and its bounding box information to appropriately place text in the pdf page.
 
-[SampleInput.pdf](./src/SearchablePDF/documents/SampleInput.pdf) is an example input document where text is locked inside the image. [SampleOutput.pdf](./src/SearchablePDF/documents/SampleOutput.pdf) is an example of a searchable pdf document where you can select and copy text and search within the document.
+[SampleInput.pdf](./raw/master/src/SearchablePDF/documents/SampleInput.pdf) is an example input document where text is locked inside the image. [SampleOutput.pdf](./raw/master/src/SearchablePDF/documents/SampleOutput.pdf) is an example of a searchable pdf document where you can select and copy text and search within the document.
 
 [PDFDocument](./src/SearchablePDF/src/main/java/com/amazon/textract/pdf/PDFDocument.java) library wraps all the necessary logic to generate searchable PDF document using output from Amazon Textract. It also uses open source Java library [Apache PDFBox](https://pdfbox.apache.org/) to create the PDF document but there similar pdf processing libraries available in other programming languages.
 
