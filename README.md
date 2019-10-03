@@ -42,23 +42,37 @@ To generate a searchable PDF, we use [Amazon Textract](https://aws.amazon.com/te
 
 1. Setup AWS Account and AWS CLI using [getting started with Amazon Textract](https://docs.aws.amazon.com/textract/latest/dg/getting-started.html).
 2. Download and unzip the [sample project](./src/SearchablePDF.zip).
-3. In the project directory run "mvn package". Install [Apache Maven](https://maven.apache.org/index.html) if it is not already installed.
-4. Run: "java -cp target/searchable-pdf-1.0.jar Demo" to run Java project with [Demo](./src/SearchablePDF/src/main/java/Demo.java) as main class.
-5. By default only first example to create searchable PDF from image on local drive is enabled. Uncomment relevant lines in [Demo](./src/SearchablePDF/src/main/java/Demo.java) to run other examples.
+3. Install [Apache Maven](https://maven.apache.org/index.html) if it is not already installed.
+4. In the project directory run "mvn package".
+5. Run: "java -cp target/searchable-pdf-1.0.jar Demo" to run Java project with [Demo](./src/SearchablePDF/src/main/java/Demo.java) as main class.
+
+By default only first example to create searchable PDF from image on local drive is enabled. Uncomment relevant lines in [Demo](./src/SearchablePDF/src/main/java/Demo.java) to run other examples.
 
 ## Run code examples in AWS Lambda
 
 1. Download and unzip the [sample project](./src/SearchablePDF.zip).
-2. In the project directory run "mvn package". Install [Apache Maven](https://maven.apache.org/index.html) if it is not already installed.
-3. The build creates .jar in project-dir/target/searchable-pdf1.0.jar, using information in the pom.xml to do the necessary transforms. This is a standalone .jar (.zip file) that includes all the dependencies. This is your [deployment package](https://docs.aws.amazon.com/lambda/latest/dg/lambda-java-how-to-create-deployment-package.html) that you can upload to AWS Lambda to create a Lambda function.  [DemoLambda](https://github.com/darwaishx/textract-searchablepdf/blob/master/src/SearchablePDF/src/main/java/DemoLambda.java) has all the necessary code to read S3 events and take action based on the type of input document.
-4. Create an AWS Lambda with Java 8 and IAM role that has read and write permissions to S3 bucket you created earlier. IAM role should also have permissions to call Amazon Textract.
-5. Set handler to "DemoLambda::handleRequest", increase timeout to 15 minutes and upload jar file you build earlier.
-6. Create an Amazon S3 bucket.
-7. Create a folder “documents” in Amazon S3 bucket.
-8. Add a trigger in the Lambda function such that when an object is uploaded to the folder “documents” in your Amazon S3 bucket, Lambda function gets executed. Make sure that you set trigger for “documents” folder. If you add trigger for the whole bucket then Lambda will trigger every time an output pdf document is generated resulting in cycle.
-9. Upload an image (jpeg, png) or pdf document to documents folder in your Amazon S3 bucket.
-10. In few seconds you should see searchable pdf document generated in the S3 bucket.
-11. These steps show simple Amazon S3 and Lambda integration. In production you should consider [scalable architecture similar to this reference architecture](https://github.com/aws-samples/amazon-textract-serverless-large-scale-document-processing).
+2. Install [Apache Maven](https://maven.apache.org/index.html) if it is not already installed.
+3. In the project directory run "mvn package".
+
+The build creates .jar in project-dir/target/searchable-pdf1.0.jar, using information in the pom.xml to do the necessary transforms. This is a standalone .jar (.zip file) that includes all the dependencies. This is your [deployment package](https://docs.aws.amazon.com/lambda/latest/dg/lambda-java-how-to-create-deployment-package.html) that you can upload to AWS Lambda to create a Lambda function.  [DemoLambda](https://github.com/darwaishx/textract-searchablepdf/blob/master/src/SearchablePDF/src/main/java/DemoLambda.java) has all the necessary code to read S3 events and take action based on the type of input document.
+
+4. Create an Amazon S3 bucket.
+5. Create a folder “documents” in Amazon S3 bucket.
+6. Create an AWS Lambda with Java 8 and IAM role that has read and write permissions to S3 bucket you created earlier.
+7. Configure the IAM role to have permissions to call Amazon Textract.
+8. Set handler to "DemoLambda::handleRequest".
+9. Increase timeout to 5 minutes.
+10. Upload jar file you build earlier.
+
+11. Add a trigger in the Lambda function such that when an object is uploaded to the folder “documents” in your Amazon S3 bucket, Lambda function gets executed.
+
+Make sure that you set trigger for “documents” folder. If you add trigger for the whole bucket then Lambda will trigger every time an output pdf document is generated resulting in cycle.
+
+12. Upload an image (jpeg, png) or pdf document to documents folder in your Amazon S3 bucket.
+
+In few seconds you should see searchable pdf document generated in the S3 bucket.
+
+These steps show simple Amazon S3 and Lambda integration. In production you should consider [scalable architecture similar to this reference architecture](https://github.com/aws-samples/amazon-textract-serverless-large-scale-document-processing).
 
 ## Cost
 - As you run these samples they call different Amazon Textract APIs in your AWS account. You will get charged for all the API calls made as part of the analysis.
