@@ -54,7 +54,7 @@ By default only first example to create searchable PDF from image on local drive
 2. Install [Apache Maven](https://maven.apache.org/index.html) if it is not already installed.
 3. In the project directory run "mvn package".
 
-The build creates .jar in project-dir/target/searchable-pdf1.0.jar, using information in the pom.xml to do the necessary transforms. This is a standalone .jar (.zip file) that includes all the dependencies. This is your [deployment package](https://docs.aws.amazon.com/lambda/latest/dg/lambda-java-how-to-create-deployment-package.html) that you can upload to AWS Lambda to create a Lambda function.  [DemoLambda](https://github.com/darwaishx/textract-searchablepdf/blob/master/src/SearchablePDF/src/main/java/DemoLambda.java) has all the necessary code to read S3 events and take action based on the type of input document.
+The build creates .jar in project-dir/target/searchable-pdf1.0.jar, using information in the pom.xml to do the necessary transforms. This is a standalone .jar (.zip file) that includes all the dependencies. This is your [deployment package](https://docs.aws.amazon.com/lambda/latest/dg/lambda-java-how-to-create-deployment-package.html) that you can upload to AWS Lambda to create a Lambda function.  [DemoLambda](./src/SearchablePDF/src/main/java/DemoLambda.java) has all the necessary code to read S3 events and take action based on the type of input document.
 
 4. Create an Amazon S3 bucket.
 5. Create a folder “documents” in Amazon S3 bucket.
