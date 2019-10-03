@@ -18,7 +18,44 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class DemoPdfFromS3Pdf {
-    private static List<ArrayList<TextLine>> extractText(String bucketName, String documentName) throws InterruptedException {
+    public void run(String bucketName, String documentName, String outputDocumentName) throws IOException, InterruptedException {
+
+        System.out.println("Generating searchable pdf from: " + bucketName + "/" + documentName);
+
+        //Extract text using Amazon Textract
+        List<ArrayList<TextLine>> linesInPages = extractText(bucketName, documentName);
+
+        //Get input pdf document from Amazon S3
+        InputStream inputPdf = getPdfFromS3(bucketName, documentName);
+
+        //Create new PDF document
+        PDFDocument pdfDocument = new PDFDocument();
+
+        //For each page add text layer and image in the pdf document
+        PDDocument inputDocument = PDDocument.load(inputPdf);
+        PDFRenderer pdfRenderer = new PDFRenderer(inputDocument);
+        BufferedImage image = null;
+        for (int page = 0; page < inputDocument.getNumberOfPages(); ++page) {
+            image = pdfRenderer.renderImageWithDPI(page, 300, org.apache.pdfbox.rendering.ImageType.RGB);
+
+            pdfDocument.addPage(image, ImageType.JPEG, linesInPages.get(page));
+
+            System.out.println("Processed page index: " + page);
+        }
+
+        //Save PDF to stream
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        pdfDocument.save(os);
+        pdfDocument.close();
+        inputDocument.close();
+
+        //Upload PDF to S3
+        UploadToS3(bucketName, outputDocumentName, "application/pdf", os.toByteArray());
+
+        System.out.println("Generated searchable pdf: " + bucketName + "/" + outputDocumentName);
+    }
+
+    private List<ArrayList<TextLine>> extractText(String bucketName, String documentName) throws InterruptedException {
 
         AmazonTextract client = AmazonTextractClientBuilder.defaultClient();
 
@@ -88,7 +125,7 @@ public class DemoPdfFromS3Pdf {
         return pages;
     }
 
-    private static InputStream getPdfFromS3(String bucketName, String documentName) throws IOException {
+    private InputStream getPdfFromS3(String bucketName, String documentName) throws IOException {
 
         AmazonS3 s3client = AmazonS3ClientBuilder.defaultClient();
         com.amazonaws.services.s3.model.S3Object fullObject = s3client.getObject(new GetObjectRequest(bucketName, documentName));
@@ -96,7 +133,7 @@ public class DemoPdfFromS3Pdf {
         return in;
     }
 
-    private static void UploadToS3(String bucketName, String objectName, String contentType, byte[] bytes) {
+    private void UploadToS3(String bucketName, String objectName, String contentType, byte[] bytes) {
         AmazonS3 s3client = AmazonS3ClientBuilder.defaultClient();
         ByteArrayInputStream baInputStream = new ByteArrayInputStream(bytes);
         ObjectMetadata metadata = new ObjectMetadata();
@@ -104,42 +141,5 @@ public class DemoPdfFromS3Pdf {
         metadata.setContentType(contentType);
         PutObjectRequest putRequest = new PutObjectRequest(bucketName, objectName, baInputStream, metadata);
         s3client.putObject(putRequest);
-    }
-
-    public static void run(String bucketName, String documentName, String outputDocumentName) throws IOException, InterruptedException {
-
-        System.out.println("Generating searchable pdf from: " + bucketName + "/" + documentName);
-
-        //Extract text using Amazon Textract
-        List<ArrayList<TextLine>> linesInPages = extractText(bucketName, documentName);
-
-        //Get input pdf document from Amazon S3
-        InputStream inputPdf = getPdfFromS3(bucketName, documentName);
-
-        //Create new PDF document
-        PDFDocument pdfDocument = new PDFDocument();
-
-        //For each page add text layer and image in the pdf document
-        PDDocument inputDocument = PDDocument.load(inputPdf);
-        PDFRenderer pdfRenderer = new PDFRenderer(inputDocument);
-        BufferedImage image = null;
-        for (int page = 0; page < inputDocument.getNumberOfPages(); ++page) {
-            image = pdfRenderer.renderImageWithDPI(page, 300, org.apache.pdfbox.rendering.ImageType.RGB);
-
-            pdfDocument.addPage(image, ImageType.JPEG, linesInPages.get(page));
-
-            System.out.println("Processed page index: " + page);
-        }
-
-        //Save PDF to stream
-        ByteArrayOutputStream os = new ByteArrayOutputStream();
-        pdfDocument.save(os);
-        pdfDocument.close();
-        inputDocument.close();
-
-        //Upload PDF to S3
-        UploadToS3(bucketName, outputDocumentName, "application/pdf", os.toByteArray());
-
-        System.out.println("Generated searchable pdf: " + bucketName + "/" + outputDocumentName);
     }
 }

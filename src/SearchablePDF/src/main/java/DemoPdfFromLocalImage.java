@@ -14,45 +14,7 @@ import java.util.List;
 
 public class DemoPdfFromLocalImage {
 
-    private static BufferedImage getImage(String documentName) throws IOException {
-
-        BufferedImage image = null;
-
-        try(InputStream in = new FileInputStream(documentName)) {
-            image = ImageIO.read(in);
-        }
-
-        return image;
-    }
-
-    private static List<TextLine> extractText(ByteBuffer imageBytes){
-
-        AmazonTextract client = AmazonTextractClientBuilder.defaultClient();
-
-        DetectDocumentTextRequest request = new DetectDocumentTextRequest()
-                        .withDocument(new Document()
-                                .withBytes(imageBytes));
-
-        DetectDocumentTextResult result = client.detectDocumentText(request);
-
-        List<TextLine> lines = new ArrayList<TextLine>();
-        List<Block> blocks = result.getBlocks();
-        BoundingBox boundingBox = null;
-        for (Block block : blocks) {
-            if ((block.getBlockType()).equals("LINE")) {
-                boundingBox = block.getGeometry().getBoundingBox();
-                lines.add(new TextLine(boundingBox.getLeft(),
-                        boundingBox.getTop(),
-                        boundingBox.getWidth(),
-                        boundingBox.getHeight(),
-                        block.getText()));
-            }
-        }
-
-        return lines;
-    }
-
-    public static void run(String documentName, String outputDocumentName) throws IOException {
+    public void run(String documentName, String outputDocumentName) throws IOException {
 
         System.out.println("Generating searchable pdf from: " + documentName);
 
@@ -85,5 +47,43 @@ public class DemoPdfFromLocalImage {
         }
 
         System.out.println("Generated searchable pdf: " + outputDocumentName);
+    }
+
+    private BufferedImage getImage(String documentName) throws IOException {
+
+        BufferedImage image = null;
+
+        try(InputStream in = new FileInputStream(documentName)) {
+            image = ImageIO.read(in);
+        }
+
+        return image;
+    }
+
+    private List<TextLine> extractText(ByteBuffer imageBytes) {
+
+        AmazonTextract client = AmazonTextractClientBuilder.defaultClient();
+
+        DetectDocumentTextRequest request = new DetectDocumentTextRequest()
+                .withDocument(new Document()
+                        .withBytes(imageBytes));
+
+        DetectDocumentTextResult result = client.detectDocumentText(request);
+
+        List<TextLine> lines = new ArrayList<TextLine>();
+        List<Block> blocks = result.getBlocks();
+        BoundingBox boundingBox = null;
+        for (Block block : blocks) {
+            if ((block.getBlockType()).equals("LINE")) {
+                boundingBox = block.getGeometry().getBoundingBox();
+                lines.add(new TextLine(boundingBox.getLeft(),
+                        boundingBox.getTop(),
+                        boundingBox.getWidth(),
+                        boundingBox.getHeight(),
+                        block.getText()));
+            }
+        }
+
+        return lines;
     }
 }

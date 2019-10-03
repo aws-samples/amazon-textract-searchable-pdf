@@ -15,7 +15,7 @@ import java.util.List;
 
 public class DemoPdfFromLocalPdf {
 
-    private static List<TextLine> extractText(ByteBuffer imageBytes){
+    private List<TextLine> extractText(ByteBuffer imageBytes){
 
         AmazonTextract client = AmazonTextractClientBuilder.defaultClient();
 
@@ -42,7 +42,7 @@ public class DemoPdfFromLocalPdf {
         return lines;
     }
 
-    public static void run(String documentName, String outputDocumentName) throws IOException {
+    public void run(String documentName, String outputDocumentName) throws IOException {
 
         System.out.println("Generating searchable pdf from: " + documentName);
 

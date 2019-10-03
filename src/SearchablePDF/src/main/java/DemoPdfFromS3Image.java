@@ -17,7 +17,7 @@ import java.util.List;
 
 public class DemoPdfFromS3Image {
 
-    private static List<TextLine> extractText(String bucketName, String documentName){
+    private List<TextLine> extractText(String bucketName, String documentName){
         AmazonTextract client = AmazonTextractClientBuilder.defaultClient();
 
         DetectDocumentTextRequest request = new DetectDocumentTextRequest()
@@ -45,7 +45,7 @@ public class DemoPdfFromS3Image {
         return lines;
     }
 
-    private static BufferedImage getImageFromS3(String bucketName, String documentName) throws IOException {
+    private BufferedImage getImageFromS3(String bucketName, String documentName) throws IOException {
 
         AmazonS3 s3client = AmazonS3ClientBuilder.defaultClient();
         com.amazonaws.services.s3.model.S3Object fullObject = s3client.getObject(new GetObjectRequest(bucketName, documentName));
@@ -53,7 +53,7 @@ public class DemoPdfFromS3Image {
         return image;
     }
 
-    private static void UploadToS3(String bucketName, String objectName, String contentType, byte[] bytes) throws IOException {
+    private void UploadToS3(String bucketName, String objectName, String contentType, byte[] bytes) throws IOException {
         AmazonS3 s3client = AmazonS3ClientBuilder.defaultClient();
         ByteArrayInputStream baInputStream = new ByteArrayInputStream(bytes);
         ObjectMetadata metadata = new ObjectMetadata();
@@ -63,7 +63,7 @@ public class DemoPdfFromS3Image {
         s3client.putObject(putRequest);
     }
 
-    public static void run(String bucketName, String documentName, String outputDocumentName) throws IOException {
+    public void run(String bucketName, String documentName, String outputDocumentName) throws IOException {
 
         System.out.println("Generating searchable pdf from: " + bucketName + "/" + documentName);
 

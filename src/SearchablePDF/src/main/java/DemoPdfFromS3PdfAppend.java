@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class DemoPdfFromS3PdfAppend {
-    private static List<ArrayList<TextLine>> extractText(String bucketName, String documentName) throws InterruptedException {
+    private List<ArrayList<TextLine>> extractText(String bucketName, String documentName) throws InterruptedException {
 
         AmazonTextract client = AmazonTextractClientBuilder.defaultClient();
 
@@ -89,7 +89,7 @@ public class DemoPdfFromS3PdfAppend {
         return pages;
     }
 
-    private static InputStream getPdfFromS3(String bucketName, String documentName) throws IOException {
+    private InputStream getPdfFromS3(String bucketName, String documentName) throws IOException {
 
         AmazonS3 s3client = AmazonS3ClientBuilder.defaultClient();
         com.amazonaws.services.s3.model.S3Object fullObject = s3client.getObject(new GetObjectRequest(bucketName, documentName));
@@ -97,7 +97,7 @@ public class DemoPdfFromS3PdfAppend {
         return in;
     }
 
-    private static void UploadToS3(String bucketName, String objectName, String contentType, byte[] bytes){
+    private void UploadToS3(String bucketName, String objectName, String contentType, byte[] bytes){
         AmazonS3 s3client = AmazonS3ClientBuilder.defaultClient();
         ByteArrayInputStream baInputStream = new ByteArrayInputStream(bytes);
         ObjectMetadata metadata = new ObjectMetadata();
@@ -107,7 +107,7 @@ public class DemoPdfFromS3PdfAppend {
         s3client.putObject(putRequest);
     }
 
-    public static void run(String bucketName, String documentName, String outputDocumentName) throws IOException, InterruptedException {
+    public void run(String bucketName, String documentName, String outputDocumentName) throws IOException, InterruptedException {
 
         System.out.println("Generating searchable pdf from: " + bucketName + "/" + documentName);
 
