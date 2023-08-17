@@ -58,7 +58,7 @@ The build creates .jar in project-dir/target/searchable-pdf1.0.jar, using inform
 
 4. Create an Amazon S3 bucket.
 5. Create a folder “documents” in Amazon S3 bucket.
-6. Create an AWS Lambda with Java 8 and IAM role that has read and write permissions to S3 bucket you created earlier.
+6. Create an AWS Lambda with Java 17 and IAM role that has read and write permissions to S3 bucket you created earlier.
 7. Configure the IAM role to have permissions to call Amazon Textract.
 8. Set handler to "DemoLambda::handleRequest".
 9. Increase timeout to 5 minutes.

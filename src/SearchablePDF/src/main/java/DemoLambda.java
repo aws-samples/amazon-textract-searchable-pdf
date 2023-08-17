@@ -1,7 +1,7 @@
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.S3Event;
-import com.amazonaws.services.s3.event.S3EventNotification;
+import com.amazonaws.services.lambda.runtime.events.models.s3.S3EventNotification;
 
 public class DemoLambda implements RequestHandler<S3Event, String> {
 
@@ -13,6 +13,7 @@ public class DemoLambda implements RequestHandler<S3Event, String> {
         String bucketName = record.getS3().getBucket().getName();
         String keyName = record.getS3().getObject().getKey();
         String keyNameLower = record.getS3().getObject().getKey().toLowerCase();
+        String filename = keyName.substring(keyName.lastIndexOf("/") + 1);
 
         System.out.println("Bucket Name is " + bucketName);
         System.out.println("File Path is " + keyName);
@@ -20,11 +21,11 @@ public class DemoLambda implements RequestHandler<S3Event, String> {
         try {
             if (keyNameLower.endsWith("pdf")) {
                 DemoPdfFromS3Pdf s3Pdf = new DemoPdfFromS3Pdf();
-                s3Pdf.run(bucketName, keyName, "Output.pdf");
+                s3Pdf.run(bucketName, keyName, filename);
 
             } else if (keyNameLower.endsWith("jpg") || keyNameLower.endsWith("jpeg") || keyNameLower.endsWith("png")) {
                 DemoPdfFromS3Image s3Image = new DemoPdfFromS3Image();
-                s3Image.run(bucketName, keyName, "Output.pdf");
+                s3Image.run(bucketName, keyName, filename);
             }
         } catch (Exception e) {
             e.printStackTrace();
